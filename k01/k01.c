@@ -4,26 +4,28 @@
 
 
 // 市町村別データを入れる構造体
-typedef struct {
+typedef struct {//タグ名を省略して、構造体の宣言と構造体変数の宣言が同時に行われている。
     int id; //  市町村ID
     char pref[13];  // 県名
     char name[19];  // 市町村名
     int population; // 人口
     int m_population;   // 男性人口
     int f_population;   // 女性人口
-} City;
-
+} City;//{}の中はメンバーと言う
+//typedefは型に新しい型名を付けるための文
+//この書き方は、Cityだけですましている。
+//Cityは構造体変数名
 #define DEBUG
 //  #define MAX_CITY    1741
 #define MAX_CITY    21
 
 
-void PrintCity(City city)
+void PrintCity(City city)//特定の市町村別人口データを出力する
 {
     printf("%d, %s, %s, %d, %d, %d\n", city.id, city.pref, city.name, city.population, city.m_population, city.f_population);
 }
 
-void PrintArray(City city[], int size)
+void PrintArray(City city[], int size)//市町村別人口データを全て出力する
 {
     int i;
 
@@ -32,7 +34,7 @@ void PrintArray(City city[], int size)
     }
 }
 
-int LoadData(City arrayCity[])
+int LoadData(City arrayCity[])//市町村別人口データを読み込み、City型の配列に格納する
 {
     FILE* fp;
     char buf[256];
@@ -61,9 +63,21 @@ int LoadData(City arrayCity[])
 }
 
 
-
+//int key :検索する市町村のＩＤ
+//City arrayCity[]:検索対象の都市別人口データ
+//int size: データの数
 int LinearSearch(int key, City arrayCity[], int size)
 {
+    int pos;
+    int result = -1;
+
+    for (pos=0; pos<size; pos++) {
+        if (arrayCity[pos].id  == key){
+            return pos;
+            
+        }
+    }
+    return result;
     //  ここを実装する
 
 
@@ -71,6 +85,28 @@ int LinearSearch(int key, City arrayCity[], int size)
 
 int BinarySearch(int key, City arrayCity[], int left, int right)
 {
+    int mid;
+    int ret;
+
+    if (right < left){
+        return -1;
+    }
+
+    mid = left + (right - left) / 2;
+    
+    ret = key - arrayCity[mid].id;
+
+    if(ret == 0){
+        return mid;
+    }
+
+    if(ret > 0){
+        ret = BinarySearch(key,arrayCity,mid+1,right);
+    }else{
+        ret = BinarySearch(key,arrayCity,left,mid-1);
+    }
+
+    return ret;
     //  ここを実装する
 
 
@@ -78,7 +114,7 @@ int BinarySearch(int key, City arrayCity[], int left, int right)
 
 
 
-int main(void)
+int main(void)//メイン関数。データをロードし、リニアサーチ、バイナリサーチを呼び出す。
 {
     int key;
     int result;
