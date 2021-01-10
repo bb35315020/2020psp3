@@ -131,7 +131,7 @@ void QuickSort(City arrayCity[], int left, int right)
     }
     //  ここを実装する
 
-}
+}//a
 
 
 
