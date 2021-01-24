@@ -1,5 +1,5 @@
 # 課題5 レポート
-学生番号　氏名
+学生番号　35315020  氏名 下川大輝
 
 
 ## 課題
@@ -97,13 +97,101 @@ int AdjacencyMatrix[MAX_STATIONS][MAX_STATIONS] = {
 - 幅優先探索のルート表示(10点)
 
 ## ソースコードの説明
+void DepthFirstSearch(int size, int matrix[size][size], int start)
+{
+    int visited[size];
+    int i;
+    int index;  // 変数の宣言
+    
+    for(i=0;i<MAX_STATIONS;i++){
+        visited[i] = UNVISITED;  //visitedを初期化させる
+    }
+
+    StackInit();
+    StackPush(start); //startのpushを行う
+
+    while(StackIsEmpty() == FALSE){ //index番目がUNVISITEDのときIDSITEDを代入
+        index = StackPop();
+        if(visited[index] == UNVISITED){
+            visited[index] = VISITED;
+
+            for(i=0;i<MAX_STATIONS;i++){
+                if(matrix[index][i] != 0){ //その場所から行くことが可能な場所をindexへと代入
+                    StackPush(i);
+                }
+            }
+        }
+    }
+
+    for(i=0;i<MAX_STATIONS;i++){
+        if(visited[i] == VISITED){
+            printf("(DepthFirst)%s is visited\n", ArrayStation[i].kanji); //全てがVISITEDになったら出力
+        }
+    }
+	
+    //  ここを実装する
+
+}
+
+
+
+void BreadthFirstSearch(int size, int matrix[size][size], int start)
+{
+   int visited[size];
+   int i;
+   int index;  //変数宣言
+
+   for(i=0;i<MAX_STATIONS;i++){　//visitedの初期化
+       visited[i] = UNVISITED;
+   }
+
+   InitQueue(); // キューの初期化
+   EnQueue(start);  //出発点のstartをキューにpush
+
+   while(QueueIsEmpty() == FALSE){
+       index = DeQueue();
+       if(visited[index] == UNVISITED){  //index番目がUNVISITEDならばVISITEDを代入する
+           visited[index] = VISITED;
+
+           for(i=0;i<MAX_STATIONS;i++){
+               if(matrix[index][i] != 0){ //その場所から行くことが可能な場所をキューへ
+                   EnQueue(i);
+               }
+           }
+       }
+   }
+
+   for(i=0;i<MAX_STATIONS; i++){
+       if(visited[i] == VISITED){ 　　　//すべてがVISITEDになったら出力する
+           printf("(BreadthFirst)%s is visited\n", ArrayStation[i].kanji);
+       }
+   }
+    //  ここを実装する
+}
 
 
 
 ## 出力結果
 
 ```
-
+C:\Users\bb35315020\Downloads\プログラミング演習Ⅲ\2020psp3\k05>.\k05
+(DepthFirst)赤迫 is visited
+(DepthFirst)長崎大学前 is visited
+(DepthFirst)長崎駅前 is visited
+(DepthFirst)新地中華街 is visited
+(DepthFirst)石橋 is visited
+(DepthFirst)崇福寺 is visited
+(DepthFirst)市民会館 is visited
+(DepthFirst)蛍茶屋 is visited
+(BreadthFirst)赤迫 is visited
+(BreadthFirst)長崎大学前 is visited
+(BreadthFirst)長崎駅前 is visited
+(BreadthFirst)新地中華街 is visited
+(BreadthFirst)石橋 is visited
+(BreadthFirst)崇福寺 is visited
+(BreadthFirst)市民会館 is visited
+(BreadthFirst)蛍茶屋 is visited
+Time Required: 4194432
 ```
 
 ## 修正履歴

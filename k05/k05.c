@@ -61,7 +61,7 @@ void StackInit(void)
 
 void StackPush(Item value)
 {
-    if (SP >= STACK_SIZE) {
+    if (SP >= STACK_SIZE){
         printf("Stack Overflow\n");
         return;
     }
@@ -71,7 +71,7 @@ void StackPush(Item value)
 
 Item StackPop(void)
 {
-    if (SP < 0) {
+    if (SP < 0){
         printf("Stack Underflow\n");
         return ErrorItem;
     }
@@ -105,6 +105,36 @@ int StackIsEmpty(void)
 
 void DepthFirstSearch(int size, int matrix[size][size], int start)
 {
+    int visited[size];
+    int i;
+    int index;
+    
+    for(i=0;i<MAX_STATIONS;i++){
+        visited[i] = UNVISITED;
+    }
+
+    StackInit();
+    StackPush(start);
+
+    while(StackIsEmpty() == FALSE){
+        index = StackPop();
+        if(visited[index] == UNVISITED){
+            visited[index] = VISITED;
+
+            for(i=0;i<MAX_STATIONS;i++){
+                if(matrix[index][i] != 0){
+                    StackPush(i);
+                }
+            }
+        }
+    }
+
+    for(i=0;i<MAX_STATIONS;i++){
+        if(visited[i] == VISITED){
+            printf("(DepthFirst)%s is visited\n", ArrayStation[i].kanji);
+        }
+    }
+	
     //  ここを実装する
 
 }
@@ -171,17 +201,36 @@ int QueueIsEmpty()
 
 void BreadthFirstSearch(int size, int matrix[size][size], int start)
 {
+   int visited[size];
+   int i;
+   int index;
+
+   for(i=0;i<MAX_STATIONS;i++){
+       visited[i] = UNVISITED;
+    }
+
+   InitQueue();
+   EnQueue(start);
+
+   while(QueueIsEmpty() == FALSE){
+       index = DeQueue();
+       if(visited[index] == UNVISITED){
+           visited[index] = VISITED;
+
+           for(i=0;i<MAX_STATIONS;i++){
+               if(matrix[index][i] != 0){
+                   EnQueue(i);
+               }
+           }
+       }
+   }
+
+   for(i=0;i<MAX_STATIONS; i++){
+       if(visited[i] == VISITED){
+           printf("(BreadthFirst)%s is visited\n", ArrayStation[i].kanji);
+       }
+   }
     //  ここを実装する
-
-}
-
-
-#define INF_COST    9999
-
-int SearchGraphByDijkstra(int start, int goal, int size, int matrix[size][size])
-{
-    //  ここを実装する
-
 }
 
 
@@ -193,7 +242,6 @@ int main(void)
     DepthFirstSearch(MAX_STATIONS, AdjacencyMatrix, 0);
     BreadthFirstSearch(MAX_STATIONS, AdjacencyMatrix, 0);
 
-    cost = SearchGraphByDijkstra(0, 7, MAX_STATIONS, AdjacencyMatrix);
     printf("Time Required: %d\n", cost);
 
     return 0;
