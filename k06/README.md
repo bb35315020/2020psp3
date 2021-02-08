@@ -1,5 +1,5 @@
 # 課題6 レポート
-学生番号　氏名
+学生番号 35315020　氏名  下川大輝
 
 
 ## 課題
@@ -67,12 +67,79 @@ typedef struct tagMenu{
 
 ## ソースコードの説明
 
+void DynamicProgLimited(Menu arrayItem[], int items, int nap_size)
+{
+    int nap_value[items+1][nap_size + 1];  
+    int history[items+1][nap_size + 1];    
+
+    int i,j,k,pre_j,cur_j;
+
+    printf("input (items,nap_size) = (%d,%d)\n",items,nap_size);
+
+    for(i = 0; i <= NUM_ITEMS; i++){     //表を0で初期化する。
+        for(j = 0; j <= NAP_SIZE; j++){
+            nap_value[i][j] = 0;   
+            history[i][j] = 0;
+        }
+    }
+
+    
+    for(i = 0; i <= NUM_ITEMS; i++){  //表に0以外の値が入っていたらプログラムを終了する。
+        for(j = 0; j <= NAP_SIZE; j++){
+            if(nap_value[i][j] != 0){    
+                printf("Initialization failure\n");
+                exit(1);
+            }
+        }
+    }
+    
+
+
+    for(i = 1; i <= NUM_ITEMS; i++){    
+        for(j = 1; j < arrayItem[i-1].price; j++){  //価格が収まりきらない場所まで上の状態を引き継ぐ。
+            nap_value[i][j] = nap_value[i-1][j];
+            history[i][j] = j;  //historyにベースとなったセルのjを記録。
+        }
+
+        for(j; j <= NAP_SIZE; j++){     NAP_SIZE列まで処理を続ける。
+            if(nap_value[i-1][j] < nap_value[i-1][j-arrayItem[i-1].price] + arrayItem[i-1].calorie){
+                nap_value[i][j] = nap_value[i-1][j-arrayItem[i-1].price] + arrayItem[i-1].calorie;  //新しい商品を入れる方が大きくなる場合入れることができる。
+                history[i][j] = j - arrayItem[i-1].price;
+            }else{
+                nap_value[i][j] = nap_value[i-1][j];
+                history[i][j] = j;
+            }
+        }
+    }
+
+    printf("max calorie = %d\n",nap_value[NUM_ITEMS][NAP_SIZE]);
+
+    printf("---[Included menu]---\n");
+
+    cur_j = NAP_SIZE;
+    for(i = NUM_ITEMS; i > 0; i--){
+        pre_j = history[i][cur_j];
+
+        if(pre_j != cur_j){
+            printf("%d:%s\n",arrayItem[i-1].id,arrayItem[i-1].name);
+
+            cur_j = pre_j;
+        }
+    }
+
+
+}
 
 
 ## 出力結果
 
 ```
-
+C:\Users\bb35315020\Downloads\プログラミング演習Ⅲ\2020psp3\k06>.\k06
+input (items,nap_size) = (135,1000)
+max calorie = 1796
+---[Included menu]---
+120:"ラージライス"
+86:"パルマ風スパゲッティ（Wサイズ）"
 ```
 
 ## 修正履歴
